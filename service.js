@@ -1,19 +1,63 @@
-var request = require('request');
 
-var backendUrl = "https://cqlv2-hotel-web-api.herokuapp.com";
+class Service {
+    constructor() {
+        this.request = require('request-promise-native');
+    }
 
-function listerClients(callbackFunction) {
-    request(backendUrl + "/clients?start=0&size=3", {json: true}, function (err, res, listeDeClients) {
-        if(err) {
-            callbackFunction({
-                error: err
-            });
-        }else{
-            callbackFunction({
-                data: listeDeClients   
-            });
-        }
-    });
+    listerClients() {
+        return this.request.get('https://hotel-web-api-spring.herokuapp.com/clients', { json: true});
+    }
+
+    findByName(nom) {
+        return this.request.get(`https://hotel-web-api-spring.herokuapp.com/clients/nom=${nom}`, {json: true});
+    }
+
+    posterClient(saisieNom, saisiePrenom) {
+        return this.request.post({
+            url: 'https://hotel-web-api-spring.herokuapp.com/clients', 
+            method: 'POST',
+            json: {
+                nom: saisieNom,
+                prenoms: saisiePrenom
+            }
+        });   
+    }
 }
 
-exports.listerClients = listerClients;
+module.exports = { Service };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// var request = require('request');
+
+// var backendUrl = "http://localhost:8080";
+
+// function listerClients(callbackFunction) {
+
+
+//     request(backendUrl + "/clients?start=0&size=3", {json: true}, function (err, res, listeDeClients) {
+//         if(err) {
+//             callbackFunction({
+//                 error: err
+//             });
+//         }else{
+//             callbackFunction({
+//                 data: listeDeClients   
+//             });
+//         }
+//     });
+// }
+
+// exports.listerClients = listerClients;
